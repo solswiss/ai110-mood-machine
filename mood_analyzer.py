@@ -10,7 +10,7 @@ This class starts with very simple logic:
 """
 
 import re
-import demoji
+import emoji
 from typing import List, Dict, Tuple, Optional
 
 from dataset import POSITIVE_WORDS, NEGATIVE_WORDS
@@ -56,21 +56,21 @@ class MoodAnalyzer:
         """
         cleaned = text.strip().lower()
 
-        # remove punctuation
-        cleaned = re.sub(r'[^\w\s]', '', cleaned)
         # separate emojis
-        emojis = list(demoji.findall(cleaned).keys())
-        cleaned = demoji.replace(cleaned, "")
+        emojis = emoji.distinct_emoji_list(cleaned)
+        cleaned = re.sub("|".join(emojis), "", cleaned)
+        print("emojis:",emojis)
+        print("cleaned:",cleaned)
+        # remove punctuation
+        cleaned = re.sub(r'[^\w\s]', '', cleaned).split()
 
-        tokens = cleaned.split()
-
-        return tokens, emojis
+        return cleaned, emojis
 
     # ---------------------------------------------------------------------
     # Scoring logic
     # ---------------------------------------------------------------------
 
-    def score_text(self, text: str) -> int:
+    def score_text(self, text: str) -> float:
         """
         Compute a numeric "mood score" for the given text.
 
@@ -95,13 +95,35 @@ class MoodAnalyzer:
         
         tokens, emojis = self.preprocess(text)
         score = 0
+
+        fr_pos = 1
+        fr_neg = -1
         
-        for t in tokens:
-            if t in self.positive_words: score += 1
-            elif t in self.negative_words: score -= 1
+        for i in range(len(tokens)):
+            s = tokens[i-1]
+            t = tokens[i]
+            if t in ['ong']:
+                if s in self.positive_words:
+                    score += 1.5*fr_pos
+                elif s in self.negative_words:
+                    score += 1.5*fr_neg
+            if t in self.positive_words: 
+                if s:
+                  if s in ['not']:
+                    score += fr_neg
+                  elif s in ['lwk']:
+                    score += .5*fr_pos
+                score += fr_pos
+            elif t in self.negative_words:
+                if s:
+                  if s in ['not']:
+                    score += fr_pos
+                  elif s in ['lwk']:
+                    score += .5*fr_neg
+                score += fr_neg
         for e in emojis:
-            if e in ['🤩','😂','🙂‍↕️']: score += 5
-            elif e in ['🥶','😭']: score -= 5
+            if e in ['🤩','😂','🙂‍↕️']: score += 3*fr_pos
+            elif e in ['🥶','😭','🥺']: score += 3*fr_neg
 
         print(score)
         return score
@@ -135,7 +157,7 @@ class MoodAnalyzer:
 
         if score >= 1:
             return "positive"
-        elif score <= 1:
+        elif score <= -1:
             return "negative"
         elif score == 0:
             return "neutral"

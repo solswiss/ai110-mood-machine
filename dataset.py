@@ -23,6 +23,10 @@ POSITIVE_WORDS = [
     "chill",
     "relaxed",
     "amazing",
+    "hopeful",
+    "cute",
+    "thank",
+    "greatest"
 ]
 
 NEGATIVE_WORDS = [
@@ -36,6 +40,8 @@ NEGATIVE_WORDS = [
     "stressed",
     "hate",
     "boring",
+    "crash",
+    "slop"
 ]
 
 # ---------------------------------------------------------------------
@@ -65,13 +71,6 @@ TRUE_LABELS = [
     "neutral",   # "This is fine"
     "positive",  # "So excited for the weekend"
     "negative",  # "I am not happy about this"
-    "positive",  # "anyone else cooked for finals week? 🥶"
-    "negative",  # "Can't wait to bomb finals 🤩"
-    "positive",  # "lwk cooked that pop quiz",
-    "negative",  # "feeling cute might crash out"
-    "positive",  # "ts prof might be the greatest to ever do it"
-    "mixed",     # "The campus cats are too cute... I wish they wouldn't run away 🥹"
-    "negative",  # "dining hall feeding us straight slop ong 😂"
 ]
 
 # TODO: Add 5-10 more posts and labels.

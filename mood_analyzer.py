@@ -9,6 +9,8 @@ This class starts with very simple logic:
   - Convert that score into a mood label
 """
 
+import re
+import demoji
 from typing import List, Dict, Tuple, Optional
 
 from dataset import POSITIVE_WORDS, NEGATIVE_WORDS
@@ -36,7 +38,7 @@ class MoodAnalyzer:
     # Preprocessing
     # ---------------------------------------------------------------------
 
-    def preprocess(self, text: str) -> List[str]:
+    def preprocess(self, text: str) -> tuple[List[str], List[str]]:
         """
         Convert raw text into a list of tokens the model can work with.
 
@@ -53,9 +55,16 @@ class MoodAnalyzer:
           - Normalize repeated characters ("soooo" -> "soo")
         """
         cleaned = text.strip().lower()
+
+        # remove punctuation
+        cleaned = re.sub(r'[^\w\s]', '', cleaned)
+        # separate emojis
+        emojis = list(demoji.findall(cleaned).keys())
+        cleaned = demoji.replace(cleaned, "")
+
         tokens = cleaned.split()
 
-        return tokens
+        return tokens, emojis
 
     # ---------------------------------------------------------------------
     # Scoring logic
@@ -83,8 +92,20 @@ class MoodAnalyzer:
         #
         # Hint: if you implement negation, you may want to look at pairs of tokens,
         # like ("not", "happy") or ("never", "fun").
-        pass
+        
+        tokens, emojis = self.preprocess(text)
+        score = 0
+        
+        for t in tokens:
+            if t in self.positive_words: score += 1
+            elif t in self.negative_words: score -= 1
+        for e in emojis:
+            if e in ['🤩','😂','🙂‍↕️']: score += 5
+            elif e in ['🥶','😭']: score -= 5
 
+        print(score)
+        return score
+    
     # ---------------------------------------------------------------------
     # Label prediction
     # ---------------------------------------------------------------------
@@ -110,7 +131,16 @@ class MoodAnalyzer:
         #   2. Return "positive" if the score is above 0.
         #   3. Return "negative" if the score is below 0.
         #   4. Return "neutral" otherwise.
-        pass
+        score = self.score_text(text)
+
+        if score >= 1:
+            return "positive"
+        elif score <= 1:
+            return "negative"
+        elif score == 0:
+            return "neutral"
+        else: #elif 1 >= score >= -1:
+            return "mixed"
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)

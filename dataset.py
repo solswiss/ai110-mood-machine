@@ -65,6 +65,13 @@ TRUE_LABELS = [
     "neutral",   # "This is fine"
     "positive",  # "So excited for the weekend"
     "negative",  # "I am not happy about this"
+    "positive",  # "anyone else cooked for finals week? 🥶"
+    "negative",  # "Can't wait to bomb finals 🤩"
+    "positive",  # "lwk cooked that pop quiz",
+    "negative",  # "feeling cute might crash out"
+    "positive",  # "ts prof might be the greatest to ever do it"
+    "mixed",     # "The campus cats are too cute... I wish they wouldn't run away 🥹"
+    "negative",  # "dining hall feeding us straight slop ong 😂"
 ]
 
 # TODO: Add 5-10 more posts and labels.
@@ -92,3 +99,27 @@ TRUE_LABELS = [
 #
 # Remember to keep them aligned:
 #   len(SAMPLE_POSTS) == len(TRUE_LABELS)
+
+SAMPLE_POSTS.append("anyone else cooked for finals week? 🥶")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("Can't wait to bomb finals 🤩")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("lwk cooked that pop quiz")
+TRUE_LABELS.append("positive")
+
+SAMPLE_POSTS.append("feeling cute might crash out")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("ts prof might be the greatest to ever do it")
+TRUE_LABELS.append("positive")
+
+SAMPLE_POSTS.append("The campus cats are too cute... I wish they wouldn't run away 🥺")
+TRUE_LABELS.append("mixed")
+
+SAMPLE_POSTS.append("dining hall feeding us straight slop ong 😂😭")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("Thank you White Monster for getting me through this exam season 🙂‍↕️")
+TRUE_LABELS.append("positive")
